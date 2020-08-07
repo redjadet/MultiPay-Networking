@@ -38,7 +38,7 @@ struct NetworkClient {
   }
   
   static func request(_ convertible: URLRequestConvertible) -> DataRequest {
-    shared.session.request(convertible).validate().authenticate(username: ImaggaCredentials.username, password: ImaggaCredentials.password)
+    shared.session.request(convertible).validate().authenticate(username: Credentials.username, password: Credentials.password)
   }
   
   static func download(_ url: String) -> DownloadRequest {
@@ -46,10 +46,10 @@ struct NetworkClient {
   }
   
   static func upload(multipartFormData: @escaping (MultipartFormData) -> Void, with convertible: URLRequestConvertible) -> UploadRequest {
-    shared.session.upload(multipartFormData: multipartFormData, with: convertible).validate().authenticate(username: ImaggaCredentials.username, password: ImaggaCredentials.password)
+    shared.session.upload(multipartFormData: multipartFormData, with: convertible).validate().authenticate(username: Credentials.username, password: Credentials.password)
   }
     
-    func post(_ path:String, parameters: Codable, completion: @escaping (Result<Void, Error>) -> Void) {
+    static func post(_ path:String, parameters: Codable, completion: @escaping (Result<Void, Error>) -> Void) {
       AF.request(path, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).validate().response { response in
         switch response.result {
         case .success:
@@ -59,5 +59,17 @@ struct NetworkClient {
         }
       }
     }
+    
+    func get(_ path:String, completion: @escaping (Result<[Codable], Error>) -> Void) {
+      AF.request(path).validate().responseDecodable(of: [Codable].self) { response in
+        switch response.result {
+        case .success(let response):
+          completion(.success(response))
+        case .failure(let error):
+          completion(.failure(error))
+        }
+      }
+    }
+    
     
 }
