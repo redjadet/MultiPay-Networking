@@ -1,0 +1,6 @@
+framework module Pods_Multipay_NetworkingPackageDescription {
+  umbrella header "Pods-Multipay_NetworkingPackageDescription-umbrella.h"
+
+  export *
+  module * { export * }
+}
