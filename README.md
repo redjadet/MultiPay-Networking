@@ -1,4 +1,4 @@
-# MultiPay-Networking
+# Multipay_Networking
 
 - Supports
  GET
@@ -34,7 +34,7 @@
        }
  }
  
- - Example of download request will be like this:
+ - Example of download request will be like this with func:
  
  func downloadSampleImage(progressCompletion: @escaping (_ percent: Float) -> Void, completion: @escaping (_ tags: [String]?) -> Void) {
     let imageURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wikipedia-logo-v2-en.svg/1200px-Wikipedia-logo-v2-en.svg.png"
@@ -51,9 +51,34 @@
           completion(nil, nil)
           return
         }
-        self.upload(image: image, progressCompletion: progressCompletion, completion: completion)					
+        self.upload(image: image, progressCompletion: progressCompletion, completion: completion)                    
       }
     }
   }
- 
+  
+  - Example of upload request will be like this with func:
+  
+  func upload(image: UIImage,
+              progressCompletion: @escaping (_ percent: Float) -> Void,
+              completion: @escaping (_ tags: [String]?, _ colors: [PhotoColor]?) -> Void) {
+    guard let imageData = image.jpegData(compressionQuality: 0.5) else {
+      print("Could not get JPEG representation of UIImage")
+      return
+    }
+    NetworkClient.upload(multipartFormData: { multipartFormData in
+      multipartFormData.append(imageData, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
+    }, with: Router.upload)
+      .uploadProgress { progress in
+        progressCompletion(Float(progress.fractionCompleted))
+      }.responseDecodable(of: UploadImageResponse.self) { response in
+        switch response.result {
+        case .failure(let error):
+          print("Error uploading file: \(error)")
+          completion(nil, nil)
+        case .success(let uploadResponse):
+          let resultID = uploadResponse.result.uploadID
+          print("Content uploaded with ID: \(resultID)")
+        }
+    }
+  }
  
