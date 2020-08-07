@@ -60,7 +60,7 @@ struct NetworkClient {
       }
     }
     
-    func get(_ path:String, completion: @escaping (Result<[Codable], Error>) -> Void) {
+    static func get(_ path:String, completion: @escaping (Result<[Codable], Error>) -> Void) {
       AF.request(path).validate().responseDecodable(of: [Codable].self) { response in
         switch response.result {
         case .success(let response):
