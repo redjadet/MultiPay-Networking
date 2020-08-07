@@ -1,5 +1,14 @@
 # MultiPay-Networking
 
+- Supports
+ GET
+ POST
+ Download files
+ Upload files
+ Certificate Pinning
+ Retry Request
+
+
 - Example GET request will be like this:
 
  NetworkClient.get("http://localhost:8080/api/") { response in
