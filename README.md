@@ -42,8 +42,7 @@
           completion(nil, nil)
           return
         }
-        self.upload(image: image, progressCompletion: progressCompletion, completion: completion)
-								
+        self.upload(image: image, progressCompletion: progressCompletion, completion: completion)					
       }
     }
   }
