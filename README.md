@@ -43,6 +43,7 @@
           return
         }
         self.upload(image: image, progressCompletion: progressCompletion, completion: completion)
+								
       }
     }
   }
